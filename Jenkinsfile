@@ -9,13 +9,6 @@ pipeline {
         REPOSITORY_URI = "xxxxxxxxxx.dkr.ecr.us-east-1.amazonaws.com/jenkins-pipeline"
     }
     stages {
-        stage('Git checkout') {
-            steps {
-                git 'https://github.com/tkibnyusuf/wordpress_repo.git'
-            }
-        }
-        
-      
          stage('Logging into AWS ECR') {
                      environment {
                         AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
