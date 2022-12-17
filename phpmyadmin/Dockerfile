@@ -11,7 +11,7 @@ RUN apt update && \
     vim
 
 # Replace php.ini
-COPY phpmyadmin/php.ini /usr/local/etc/php
+COPY php.ini /usr/local/etc/php
 
 # Remove old php.ini files
 RUN rm /usr/local/etc/php/php.ini-development && \
