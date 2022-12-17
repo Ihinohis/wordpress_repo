@@ -11,24 +11,11 @@ pipeline {
     stages {
         stage('Git checkout') {
             steps {
-                git 'https://github.com/tkibnyusuf/realone-repo.git'
+                git 'https://github.com/tkibnyusuf/wordpress_repo.git'
             }
         }
         
-        stage('Build with maven') {
-            steps {
-                sh 'cd SampleWebApp && mvn clean install'
-            }
-        }
-        
-             stage('Test') {
-            steps {
-                sh 'cd SampleWebApp && mvn test'
-            }
-        
-            }
-        
-        
+      
          stage('Logging into AWS ECR') {
                      environment {
                         AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
