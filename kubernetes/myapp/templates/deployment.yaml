@@ -15,17 +15,7 @@ spec:
         {{- include "myapp.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - env:
-        - name: DATABASENAME
-          value: admin
-        - name: DATABASEUSER
-          value: wordpress
-        - name: DATABASEPASSWORD
-          value: wordpress
-        - name: DATABASEHOST
-          value: mongodb://wordpress:wordpress@3.93.45.143:27017/admin
-
-        name: {{ .Chart.Name }}
+      - name: {{ .Chart.Name }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:
