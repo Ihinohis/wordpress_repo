@@ -1,30 +1,23 @@
 FROM jenkins/jenkins:lts
-MAINTAINER yusuftaofeek55@gmail.com
+
+ARG GOSU_VERSION=1.10
+
+# switch to root, let the entrypoint drop back to jenkins
 USER root
 
-RUN apt-get update && \
-    apt-get -y install apt-transport-https \
-      ca-certificates \
-      curl \
-      gnupg2 \
-      software-properties-common && \
-    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
-    add-apt-repository \
-      "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-      $(lsb_release -cs) \
-      stable" && \
-   apt-get update && \
-   apt-get -y install docker-ce
+# install debian packages, gosu, and docker
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+     vim \
+     wget \
+ && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+ && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+ && chmod +x /usr/local/bin/gosu \
+ && gosu nobody true \
+ && curl -sSL https://get.docker.com/ | sh \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
-#Update the username and password
-ENV JENKINS_USER admin
-ENV JENKINS_PASS admin
-
-# allows to skip Jenkins setup wizard
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-
-# Jenkins runs all grovy files from init.groovy.d dir
-# use this for creating default admin user
-COPY default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
-
-VOLUME /var/jenkins_home
+# entrypoint is used to update docker gid and revert back to jenkins user
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
