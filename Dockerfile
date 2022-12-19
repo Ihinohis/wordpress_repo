@@ -1,7 +1,5 @@
 FROM jenkins/jenkins:lts
-MAINTAINER bkshashi9@gmail.com
-USER root
-
+MAINTAINER yusuftaofeek55@gmail.com
 RUN apt-get update && \
     apt-get -y install apt-transport-https \
       ca-certificates \
