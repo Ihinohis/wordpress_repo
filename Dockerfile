@@ -1,24 +1,22 @@
-FROM wordpress:latest
+FROM jenkins/jenkins:lts
+USER root
 
-#APT Update/Upgrade, then install packages we need
+RUN apt-get update && \
+    apt-get -y install apt-transport-https \
+      ca-certificates \
+      curl \
+      gnupg2 \
+      software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
+    add-apt-repository \
+      "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+      $(lsb_release -cs) \
+      stable" && \
+   apt-get update && \
+   apt-get -y install docker-ce
+USER jenkins
 
-RUN apt update && \
-    apt upgrade -y && \
-    apt autoremove && \
-    apt install -y \
-    vim \
-    wget \
-    mariadb-client
+# allows to skip Jenkins setup wizard
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
-# Replace php.ini
-COPY php.ini /usr/local/etc/php
-
-# Install WP-CLI
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    php wp-cli.phar --info&& \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp && \
-
-    # Remove old php.ini files (without creating new image)
-    rm /usr/local/etc/php/php.ini-development && \
-    rm /usr/local/etc/php/php.ini-production
+VOLUME /var/jenkins_home
