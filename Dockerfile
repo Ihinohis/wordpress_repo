@@ -22,7 +22,7 @@ RUN while read i ; \
 
 #Update the username and password
 ENV JENKINS_USER admin
-ENV JENKINS_PASS ThisIs@StrongP@ssword
+ENV JENKINS_PASS admin
 
 #id_rsa.pub file will be saved at /root/.ssh/
 RUN ssh-keygen -f /root/.ssh/id_rsa -t rsa -N ''
