@@ -51,10 +51,8 @@ pipeline {
                       script{
                         dir('kubernetes/') {
                           sh 'aws eks update-kubeconfig --name myapp-eks-cluster --region us-east-1'
-                          sh 'helm repo add jenkins https://charts.jenkins.io'
-                          sh 'helm repo update'
                           sh 'helm upgrade --install myjenkins jenkins/jenkins'
-                          sh 'kubectl apply -f kubernetes/deploy-loadbalancer.yml'
+                          sh 'kubectl apply -f /kubernetes/deploy-loadbalancer.yml'
 
 
 
