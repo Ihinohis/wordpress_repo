@@ -51,7 +51,7 @@ pipeline {
                       script{
                         dir('kubernetes/') {
                           sh 'aws eks update-kubeconfig --name myapp-eks-cluster --region us-east-1'
-                          sh 'helm repo update
+                          sh 'helm repo update'
                           sh 'helm upgrade --install myjenkins charts/jenkins -f charts/jenkins/values.yaml' 
 
 
