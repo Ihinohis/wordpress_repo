@@ -1,24 +1,10 @@
-FROM wordpress:latest
-
-#APT Update/Upgrade, then install packages we need
-
-RUN apt update && \
-    apt upgrade -y && \
-    apt autoremove && \
-    apt install -y \
-    vim \
-    wget \
-    mariadb-client
-
-# Replace php.ini
-COPY php.ini /usr/local/etc/php
-
-# Install WP-CLI
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    php wp-cli.phar --info&& \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp && \
-
-    # Remove old php.ini files (without creating new image)
-    rm /usr/local/etc/php/php.ini-development && \
-    rm /usr/local/etc/php/php.ini-production
+FROM centos:7
+RUN yum install java-11-openjdk.x86_64 -y
+RUN yum install wget -y
+RUN yum install httpd -y
+RUN yum install git -y
+RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+RUN rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+RUN yum install jenkins -y
+RUN yum install openssh-server -y
+CMD java -jar /usr/lib/jenkins/jenkins.war
