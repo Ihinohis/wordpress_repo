@@ -53,7 +53,7 @@ pipeline {
                           sh 'aws eks update-kubeconfig --name myapp-eks-cluster --region us-east-1'
                           sh 'helm repo add jenkins https://charts.jenkins.io'
                           sh 'helm repo update'
-                          sh 'helm upgrade --install myjenkins charts/jenkins -f charts/jenkins/values.yaml' 
+                          sh 'helm upgrade --install myjenkins wordpress_repo/charts/jenkins -f wordpress_repo/charts/jenkins/values.yaml' 
 
 
 
